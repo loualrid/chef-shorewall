@@ -1,0 +1,44 @@
+# Shorewall version 4.0 - Sample Rules File for two-interface configuration.
+# Copyright (C) 2006,2007 by the Shorewall Team
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# See the file README.txt for further details.
+#------------------------------------------------------------------------------
+# For information about entries in this file, type "man shorewall-rules"
+######################################################################################################################################################################################################
+#ACTION         SOURCE          DEST            PROTO   DEST    SOURCE          ORIGINAL        RATE            USER/   MARK    CONNLIMIT       TIME            HEADERS         SWITCH          HELPER
+#                                                       PORT    PORT(S)         DEST            LIMIT           GROUP
+#SECTION ALL
+#SECTION ESTABLISHED
+#SECTION RELATED
+#SECTION INVALID
+#SECTION UNTRACKED
+SECTION NEW
+
+# Drop packets in the INVALID state
+
+Invalid(DROP)  net              $FW             tcp
+
+# Drop Ping from the "bad" net zone.. and prevent your log from being flooded..
+
+#Ping(DROP)     net             $FW
+# Our custom rules
+<%= @base_net_rule %><%= @open_net_ports.join(',') %>
+<%= @base_loc_rule %><%= @open_loc_ports.join(',') %>
+
+<%= ( @base_net_rule.gsub('net', "net:!#{ @blocked_net_ips.join(',') }") + @open_net_ports.join(',') ) unless @blocked_net_ips.empty? %>
+<%= ( @base_loc_rule.gsub('net', "loc:!#{ @blocked_loc_ips.join(',') }") + @open_loc_ports.join(',') ) unless @blocked_loc_ips.empty? %>
+
+#      Allow all ICMP types (including ping) from firewall
+ACCEPT    fw           loc                     icmp
+ACCEPT    fw           net                     icmp
+
+# allow our machine to respond to pings
+#Ping/ACCEPT  net        $FW
+#Ping/ACCEPT  loc        fw
+#Ping/ACCEPT  net        fw
+Ping(ACCEPT) net        fw
