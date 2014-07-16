@@ -11,7 +11,7 @@ node['shorewall']['setup_files'].each do |dep|
       base_net_rule:   node['shorewall']['base_net_rule'],
       base_loc_rule:   node['shorewall']['base_loc_rule'],
       open_net_ports:  node['shorewall']['open_net_ports'],
-      open_loc_ports:  node['shorewall']['open_net_ports'],
+      open_loc_ports:  node['shorewall']['open_loc_ports'],
       blocked_net_ips: node['shorewall']['blocked_net_ips'],
       blocked_loc_ips: node['shorewall']['blocked_loc_ips']
     )
