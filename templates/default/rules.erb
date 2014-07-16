@@ -31,7 +31,7 @@ Invalid(DROP)  net              $FW             tcp
 <%= @base_loc_rule %><%= @open_loc_ports.join(',') %>
 
 <%= ( @base_net_rule.gsub('net', "net:!#{ @blocked_net_ips.join(',') }") + @open_net_ports.join(',') ) unless @blocked_net_ips.empty? %>
-<%= ( @base_loc_rule.gsub('net', "loc:!#{ @blocked_loc_ips.join(',') }") + @open_loc_ports.join(',') ) unless @blocked_loc_ips.empty? %>
+<%= ( @base_loc_rule.gsub('loc', "loc:!#{ @blocked_loc_ips.join(',') }") + @open_loc_ports.join(',') ) unless @blocked_loc_ips.empty? %>
 
 #      Allow all ICMP types (including ping) from firewall
 ACCEPT    fw           loc                     icmp
